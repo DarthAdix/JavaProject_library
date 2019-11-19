@@ -69,5 +69,6 @@ public class LibraryControl {
     private void exit(){
         System.out.println("Koniec programu");
         dataReader.close();
+
     }
 }
