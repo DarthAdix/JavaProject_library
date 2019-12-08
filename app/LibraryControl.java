@@ -10,7 +10,7 @@ import model.Publication;
 
 import java.util.InputMismatchException;
 
-public class LibraryControl {
+ class LibraryControl {
     //zmienna do komunikacji z użytkownikiem
     private ConsolePrinter printer = new ConsolePrinter();
     private DataReader dataReader = new DataReader(printer);
@@ -19,7 +19,7 @@ public class LibraryControl {
     private Library library = new Library();
 
     //główna pętla kontroli programu
-    public void controlLoop(){
+     void controlLoop(){
         Option option;
 
         do {
@@ -107,5 +107,35 @@ public class LibraryControl {
         printer.printLine("Koniec programu");
         dataReader.close();
 
+    }
+
+    private enum Option {
+        EXIT(0, "Wyjście z programu"),
+        ADD_BOOK(1, "Dodaj książkę"),
+        ADD_MAGAZINE(2, "Dodaj magazyn"),
+        PRINT_BOOKS(3, "Wyświetl listę książek"),
+        PRINT_MAGAZINES(4, "Wyświetl listę magazynów");
+
+        private int value;
+        private String description;
+
+        //    constructor
+        Option(int value, String description){
+            this.value = value;
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return value + " - " + description;
+        }
+
+        static Option createFromInt(int option) throws NoSuchOptionException{
+            try {
+                return Option.values()[option];
+            } catch (ArrayIndexOutOfBoundsException e){
+                throw new NoSuchOptionException("Nie ma opcji o id " + option);
+            }
+        }
     }
 }
