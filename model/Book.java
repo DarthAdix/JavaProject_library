@@ -3,6 +3,7 @@ package model;
 import java.util.Objects;
 
 public class Book extends Publication{
+    public static final String TYPE = "Book";
     private String author;
     private int pages;
     private String isbn;
@@ -12,8 +13,7 @@ public class Book extends Publication{
         this.isbn = isbn;
     }
 
-    public Book(String title, String author, int year,
-                 int pages, String publisher){
+    public Book(String title, String author, int year, int pages, String publisher){
         super(year, title, publisher);
         this.author = author;
         this.pages = pages;
@@ -43,10 +43,15 @@ public class Book extends Publication{
         this.isbn = isbn;
     }
 
-//    toString
+    @Override
+    public String toCsv() {
+        return TYPE + ";" + getTitle() + ";" + getPublisher() + ";" + getYear() + ";" + author + ";" + pages + ";" + isbn + "";
+    }
+
+    //    toString
     @Override
     public String toString() {
-        return super.toString() + "autor: " + author + ", strony: " + pages + ", isbn: " + isbn;
+        return super.toString() + ", autor: " + author + ", strony: " + pages + ", isbn: " + isbn;
     }
 
 //    equals and hashCode

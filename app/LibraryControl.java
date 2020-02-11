@@ -1,8 +1,14 @@
 package app;
 
+import exception.DataExportException;
+import exception.DataImportException;
+import exception.InvalidDataException;
 import exception.NoSuchOptionException;
 import io.ConsolePrinter;
 import io.DataReader;
+import io.file.FileManager;
+import io.file.FileManagerBuilder;
+import io.file.SerializableFileManager;
 import model.Library;
 import model.Book;
 import model.Magazine;
@@ -14,9 +20,21 @@ import java.util.InputMismatchException;
     //zmienna do komunikacji z użytkownikiem
     private ConsolePrinter printer = new ConsolePrinter();
     private DataReader dataReader = new DataReader(printer);
+    private FileManager fileManager;
 
-    //klasa przechowująca dane
-    private Library library = new Library();
+    private Library library;
+
+    LibraryControl () {
+        fileManager = new FileManagerBuilder(printer, dataReader).build();
+        try {
+            library = fileManager.importData();
+            printer.printLine("Zaimportowano dane z pliku");
+        } catch (DataImportException | InvalidDataException e) {
+            printer.printLine(e.getMessage());
+            printer.printLine("Zainicjowano nową bazę");
+            library = new Library();
+        }
+    }
 
     //główna pętla kontroli programu
      void controlLoop(){
@@ -72,7 +90,7 @@ import java.util.InputMismatchException;
     private void addBook(){
         try {
             Book book = dataReader.readAndCreateBook();
-            library.addBook(book);
+            library.addPublication(book);
         } catch (InputMismatchException e){
             printer.printLine("Nie udało się utworzyć, niepoprawne dane");
         } catch (ArrayIndexOutOfBoundsException e){
@@ -89,7 +107,7 @@ import java.util.InputMismatchException;
     private void addMagazine(){
         try {
             Magazine magazine = dataReader.readAndCreateMagazine();
-            library.addMagazine(magazine);
+            library.addPublication(magazine);
         } catch (InputMismatchException e){
             printer.printLine("Nie udało się utworzyć, niepoprawne dane");
         } catch (ArrayIndexOutOfBoundsException e){
@@ -104,6 +122,12 @@ import java.util.InputMismatchException;
     }
 
     private void exit(){
+        try {
+            fileManager.exportData(library);
+            printer.printLine("Wyeksportowano dane do pliku");
+        } catch (DataExportException e) {
+            printer.printLine(e.getMessage());
+        }
         printer.printLine("Koniec programu");
         dataReader.close();
 
