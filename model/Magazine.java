@@ -41,7 +41,7 @@ public class Magazine extends Publication{
 
     @Override
     public String toCsv() {
-        return TYPE + ";" + getTitle() + ";" + getPublisher() + ";" + getYear() + ";" + month + ";" + day + ";" + language + "";
+        return TYPE + ";" + getTitle() + ";" + getPublisher() + ";" + getYear() + ";" + month + ";" + day + ";" + language;
     }
 
     //   toString
