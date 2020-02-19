@@ -1,19 +1,29 @@
 package model;
 
+import exception.UserAlreadyExistsException;
+
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Library implements Serializable {
-    private static final int INITIAL_CAPACITY = 1;
-    private Publication[] publications = new Publication[INITIAL_CAPACITY];
-    private int publicationsNumber;
+    private Map<String, Publication> publications = new HashMap<>();
+    private Map<String, LibraryUser> users = new HashMap<>();
 
-    public Publication[] getPublications() {
-        Publication[] result = new Publication[publicationsNumber];
-        for (int i = 0; i < publicationsNumber; i++) {
-            result[i] = publications[i];
+    public Map<String, Publication> getPublications() {
+        return publications;
+    }
+
+    public Map<String, LibraryUser> getUsers() {
+        return users;
+    }
+
+    public void addUser(LibraryUser user){
+        if (users.containsKey(user.getPesel())){
+            throw new UserAlreadyExistsException("Użystkownik o peselu: " + user.getPesel() + " już istnieje");
         }
-        return result;
+        users.put(user.getPesel(), user);
     }
 
     public void addBook (Book book){
@@ -25,28 +35,18 @@ public class Library implements Serializable {
     }
 
     public void addPublication (Publication publication){
-        if (publicationsNumber == publications.length){
-            publications = Arrays.copyOf(publications, publications.length * 2);
+        if (publications.containsKey(publication.getTitle())){
+            throw new UserAlreadyExistsException("Publikacja o tytule: " + publication.getTitle() + " już istnieje");
         }
-        publications[publicationsNumber] = publication;
-        publicationsNumber++;
+        publications.put(publication.getTitle(), publication);
     }
 
     public boolean removePublication (Publication publication){
-        final int NOT_FOUND = -1;
-        int found = NOT_FOUND;
-        int i = 0;
-        while (i < publications.length && found == NOT_FOUND){
-            if (publication.equals(publications[i])){
-                found = i;
-            } else {
-                i++;
-            }
+        if (publications.containsValue(publication)){
+            publications.remove(publication.getTitle());
+            return true;
+        } else {
+            return false;
         }
-        if (found != NOT_FOUND){
-            System.arraycopy(publications, found + 1, publications, found, publications.length - found - 1);
-            publicationsNumber--;
-        }
-        return found != NOT_FOUND;
     }
 }
