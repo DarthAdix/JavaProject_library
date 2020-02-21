@@ -6,9 +6,7 @@ import io.DataReader;
 import io.file.FileManager;
 import io.file.FileManagerBuilder;
 import model.*;
-import model.comparator.AlphabeticalTitleComparator;
 
-import java.util.Arrays;
 import java.util.InputMismatchException;
 
 class LibraryControl {
@@ -129,15 +127,15 @@ class LibraryControl {
     }
 
     private void printBooks() {
-        printer.printBooks(library.getPublications().values());
+        printer.printBooks(library.getSortedPublications((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle())));
     }
 
     private void printMagazines() {
-        printer.printMagazines(library.getPublications().values());
+        printer.printMagazines(library.getSortedPublications((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle())));
     }
 
     private void printUsers() {
-        printer.printUsers(library.getUsers().values());
+        printer.printUsers(library.getSortedUsers((o1, o2) -> o1.getLastName().compareToIgnoreCase(o2.getLastName())));
     }
 
     private void deleteBook() {
@@ -165,12 +163,6 @@ class LibraryControl {
             printer.printLine("Nie udało się utworzyć, niepoprawne dane");
         }
     }
-
-//    private Publication[] getSortedPublications() {
-//        Publication[] publications = library.getPublications();
-//        Arrays.sort(publications, new AlphabeticalTitleComparator());
-//        return publications;
-//    }
 
     private void exit() {
         try {
