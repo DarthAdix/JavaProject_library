@@ -7,6 +7,7 @@ import io.file.FileManager;
 import io.file.FileManagerBuilder;
 import model.*;
 
+import java.util.Comparator;
 import java.util.InputMismatchException;
 
 class LibraryControl {
@@ -127,15 +128,15 @@ class LibraryControl {
     }
 
     private void printBooks() {
-        printer.printBooks(library.getSortedPublications((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle())));
+        printer.printBooks(library.getSortedPublications(Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)));
     }
 
     private void printMagazines() {
-        printer.printMagazines(library.getSortedPublications((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle())));
+        printer.printMagazines(library.getSortedPublications(Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)));
     }
 
     private void printUsers() {
-        printer.printUsers(library.getSortedUsers((o1, o2) -> o1.getLastName().compareToIgnoreCase(o2.getLastName())));
+        printer.printUsers(library.getSortedUsers(Comparator.comparing(LibraryUser::getLastName, String.CASE_INSENSITIVE_ORDER)));
     }
 
     private void deleteBook() {
