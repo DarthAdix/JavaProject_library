@@ -1,34 +1,26 @@
 package model;
 
+import java.time.MonthDay;
+import java.time.Year;
 import java.util.Objects;
 
 public class Magazine extends Publication{
     public static final String TYPE = "Magazine";
-    private int month;
-    private int day;
+    private MonthDay monthDay;
     private String language;
 
-    public Magazine(String title, String publisher, String language, int year, int month, int day){
+    public Magazine(String title, String publisher, String language, int year, int month, int day) {
         super(year, title, publisher);
+        this.monthDay = MonthDay.of(month, day);
         this.language = language;
-        this.month = month;
-        this.day = day;
     }
 
-    public int getMonth() {
-        return month;
+    public MonthDay getMonthDay() {
+        return monthDay;
     }
 
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
+    public void setMonthDay(MonthDay monthDay) {
+        this.monthDay = monthDay;
     }
 
     public String getLanguage() {
@@ -41,13 +33,19 @@ public class Magazine extends Publication{
 
     @Override
     public String toCsv() {
-        return TYPE + ";" + getTitle() + ";" + getPublisher() + ";" + getYear() + ";" + month + ";" + day + ";" + language;
+        return TYPE + ";" +
+                getTitle() + ";" +
+                getPublisher() + ";" +
+                getYear() + ";" +
+                monthDay.getMonthValue() + ";" +
+                monthDay.getDayOfMonth() + ";" +
+                language;
     }
 
     //   toString
     @Override
     public String toString() {
-        return super.toString() + " , data wydania: " + month + "-" + day + ", język: " + language;
+        return super.toString() + " , data wydania: " + monthDay.getMonth() + "-" + monthDay.getDayOfMonth() + ", język: " + language;
     }
 
 //    equals and hashCode
@@ -57,13 +55,12 @@ public class Magazine extends Publication{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Magazine magazine = (Magazine) o;
-        return month == magazine.month &&
-                day == magazine.day &&
+        return Objects.equals(monthDay, magazine.monthDay) &&
                 Objects.equals(language, magazine.language);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), month, day, language);
+        return Objects.hash(super.hashCode(), monthDay, language);
     }
 }
