@@ -1,5 +1,6 @@
 package model;
 
+import exception.PublicationAlreadyExistsException;
 import exception.UserAlreadyExistsException;
 
 import java.io.Serializable;
@@ -46,7 +47,7 @@ public class Library implements Serializable {
 
     public void addPublication (Publication publication){
         if (publications.containsKey(publication.getTitle())){
-            throw new UserAlreadyExistsException("Publikacja o tytule: " + publication.getTitle() + " już istnieje");
+            throw new PublicationAlreadyExistsException("Publikacja o tytule: " + publication.getTitle() + " już istnieje");
         }
         publications.put(publication.getTitle(), publication);
     }
@@ -58,5 +59,9 @@ public class Library implements Serializable {
         } else {
             return false;
         }
+    }
+
+    public Optional<Publication> findPublicationByTitle (String title){
+        return Optional.ofNullable(publications.get(title));
     }
 }
